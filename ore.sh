@@ -332,7 +332,7 @@ read -p "screen数量: " count
 session_base_name="ore_claim"
 
 # 启动命令模板，使用变量替代rpc地址
-start_command_template="while true; do ore --rpc $rpc_address --keypair ~/.config/solana/claim.json --priority-fee 50000000 claim --threads 4; echo '进程异常退出，等待重启' >&2; sleep 1; done"
+start_command_template="while true; do ore --rpc $rpc_address --keypair ~/.config/solana/claim.json --priority-fee 50000000 claim; echo '进程异常退出，等待重启' >&2; sleep 1; done"
 
 # 确保.solana目录存在
 mkdir -p ~/.config/solana
