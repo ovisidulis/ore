@@ -55,7 +55,7 @@ fi
 
 # 安装 Ore CLI
 echo "正在安装 Ore CLI..."
-cargo install ore-cli
+cargo install ore-cli@=0.4.2
 
 # 检查并将Solana的路径添加到 .bashrc，如果它还没有被添加
 grep -qxF 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' ~/.bashrc || echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
@@ -76,7 +76,7 @@ THREADS=${custom_threads:-4}
 
 # 获取用户输入的优先费用或使用默认值
 read -p "请输入交易的优先费用 (默认设置 1): " custom_priority_fee
-PRIORITY_FEE=${custom_priority_fee:-1}
+PRIORITY_FEE=${custom_priority_fee:-1000000}
 
 # 使用 screen 和 Ore CLI 开始挖矿
 session_name="ore"
@@ -130,7 +130,7 @@ source ~/.bashrc
 
     # 获取用户输入的优先费用或使用默认值
     read -p "请输入交易的优先费用 (默认设置 1): " custom_priority_fee
-    PRIORITY_FEE=${custom_priority_fee:-1}
+    PRIORITY_FEE=${custom_priority_fee:-1000000}
 
     # 使用 screen 和 Ore CLI 开始挖矿
     session_name="ore"
@@ -164,7 +164,7 @@ function check_and_install_dependencies() {
     # 检查是否已安装 Ore CLI
     if ! cargo install ore -V | grep ore-cli &> /dev/null; then
         echo "Ore CLI 未安装，正在安装..."
-        cargo install ore-cli
+        cargo install ore-cli@=0.4.2
     else
         echo "Ore CLI 已安装。"
     fi
@@ -184,7 +184,7 @@ THREADS=${custom_threads:-4}
 
 # 获取用户输入的优先费用或使用默认值
 read -p "请输入交易的优先费用 (默认设置 1): " custom_priority_fee
-PRIORITY_FEE=${custom_priority_fee:-1}
+PRIORITY_FEE=${custom_priority_fee:-1000000}
 
 # 使用 screen 和 Ore CLI 开始挖矿
 session_name="ore"
