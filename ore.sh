@@ -244,7 +244,7 @@ read -p "请输入你想要运行的钱包数量: " count
 session_base_name="ore"
 
 # 启动命令模板，使用变量替代rpc地址
-start_command_template="while true; do ore --rpc $rpc_address --keypair ~/.config/solana/idX.json --priority-fee 1 mine --threads 4; echo '进程异常退出，等待重启' >&2; sleep 1; done"
+start_command_template="while true; do ore --rpc $rpc_address --keypair ~/.config/solana/idX.json --priority-fee 50000000 mine --threads 4; echo '进程异常退出，等待重启' >&2; sleep 1; done"
 
 # 确保.solana目录存在
 mkdir -p ~/.config/solana
@@ -358,6 +358,10 @@ do
 done
 }
 
+function remove_screens(){
+    screen -ls|awk 'NR>=2&&NR<=20{print $1}'|awk '{print "screen -S "$1" -X quit"}'|sh
+}
+
 # 主菜单
 function main_menu() {
     while true; do
@@ -375,8 +379,6 @@ function main_menu() {
         echo "5. 领取挖矿收益"
         echo "6. 查看节点运行情况"
         echo "7. 单机多开钱包，需要自行准备json私钥"
-        echo "8. 单机多开钱包，查看奖励"
-        echo "9. 批量claim"
         read -p "请输入选项（1-9）: " OPTION
 
         case $OPTION in
@@ -389,6 +391,7 @@ function main_menu() {
         7) multiple ;; 
         8) check_multiple ;; 
         9) multi_claim ;; 
+        10）remove_screens ;;
         esac
         echo "按任意键返回主菜单..."
         read -n 1
