@@ -55,7 +55,7 @@ fi
 
 # 安装 Ore CLI
 echo "正在安装 Ore CLI..."
-cargo install ore-cli@=0.4.2
+cargo install ore-cli@=0.4.1
 
 # 检查并将Solana的路径添加到 .bashrc，如果它还没有被添加
 grep -qxF 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' ~/.bashrc || echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
@@ -164,7 +164,7 @@ function check_and_install_dependencies() {
     # 检查是否已安装 Ore CLI
     if ! cargo install ore -V | grep ore-cli &> /dev/null; then
         echo "Ore CLI 未安装，正在安装..."
-        cargo install ore-cli@=0.4.2
+        cargo install ore-cli@=0.4.1
     else
         echo "Ore CLI 已安装。"
     fi
