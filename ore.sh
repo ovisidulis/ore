@@ -303,6 +303,61 @@ done
 
 }
 
+function multi_claim() {
+#!/bin/bash
+
+echo "更新系统软件包..."
+sudo apt update && sudo apt upgrade -y
+echo "安装必要的工具和依赖..."
+sudo apt install -y curl build-essential jq git libssl-dev pkg-config screen
+check_and_install_dependencies
+    
+
+# 检查并将Solana的路径添加到 .bashrc，如果它还没有被添加
+grep -qxF 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' ~/.bashrc || echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.bashrc
+
+# 检查并将Cargo的路径添加到 .bashrc，如果它还没有被添加
+grep -qxF 'export PATH="$HOME/.cargo/bin:$PATH"' ~/.bashrc || echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
+
+# 使改动生效
+source ~/.bashrc
+
+# 提示用户输入RPC配置地址
+read -p "请输入RPC配置地址: " rpc_address
+
+# 用户输入要生成的钱包配置文件数量
+read -p "screen数量: " count
+
+# 基础会话名
+session_base_name="ore_claim"
+
+# 启动命令模板，使用变量替代rpc地址
+start_command_template="while true; do ore --rpc $rpc_address --keypair ~/.config/solana/claim.json --priority-fee 50000000 claim --threads 4; echo '进程异常退出，等待重启' >&2; sleep 1; done"
+
+# 确保.solana目录存在
+mkdir -p ~/.config/solana
+
+# 循环创建配置文件和启动挖矿进程
+for (( i=1; i<=count; i++ ))
+do
+    # 生成会话名
+    session_name="${session_base_name}_${i}"
+
+    # 替换启动命令中的配置文件名和RPC地址
+    start_command=${start_command_template}
+
+    # 打印开始信息
+    echo "开始cliam，会话名称为 $session_name ..."
+
+    # 使用 screen 在后台启动挖矿进程
+    screen -dmS "$session_name" bash -c "$start_command"
+
+    # 打印挖矿进程启动信息
+    echo "claim进程已在名为 $session_name 的 screen 会话中后台启动。"
+    echo "使用 'screen -r $session_name' 命令重新连接到此会话。"
+done
+}
+
 # 主菜单
 function main_menu() {
     while true; do
@@ -321,7 +376,8 @@ function main_menu() {
         echo "6. 查看节点运行情况"
         echo "7. 单机多开钱包，需要自行准备json私钥"
         echo "8. 单机多开钱包，查看奖励"
-        read -p "请输入选项（1-7）: " OPTION
+        echo "9. 批量claim"
+        read -p "请输入选项（1-9）: " OPTION
 
         case $OPTION in
         1) install_node ;;
@@ -332,6 +388,7 @@ function main_menu() {
         6) check_logs ;;
         7) multiple ;; 
         8) check_multiple ;; 
+        9) multi_claim ;; 
         esac
         echo "按任意键返回主菜单..."
         read -n 1
