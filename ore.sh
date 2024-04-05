@@ -391,7 +391,7 @@ function main_menu() {
         7) multiple ;; 
         8) check_multiple ;; 
         9) multi_claim ;; 
-        10）remove_screens ;;
+        10）remove_screens ;; 
         esac
         echo "按任意键返回主菜单..."
         read -n 1
